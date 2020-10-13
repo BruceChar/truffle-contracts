@@ -37,7 +37,7 @@ contract('TokenInstance', ([deployer, receiver, spender]) => {
   describe('transfer token', () => {
 
     describe('success', () => {
-
+      token.transfer(spender, receiver, 10000);
     })
 
     describe('failure', () => {

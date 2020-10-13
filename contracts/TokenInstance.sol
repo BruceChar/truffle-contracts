@@ -1,8 +1,9 @@
-pragma solidity ^0.5.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.6.0;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./Math.sol";
 
-contract owned {
+contract Owned {
     address payable public owner;
 
     constructor() public {
@@ -39,7 +40,7 @@ contract owned {
 /*      TOKEN INSTANCE STARTS HERE       */
 /******************************************/
 
-contract TokenInstance is owned {
+contract TokenInstance is Owned {
     
     using SafeMath for uint256;
     
@@ -192,7 +193,7 @@ contract TokenInstance is owned {
     
 
     //Fallback: reverts if Ether is sent to this smart contract by mistake
-	function () external {
+	fallback() external {
 		revert();
 	}
 }

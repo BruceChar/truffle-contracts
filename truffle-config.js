@@ -1,6 +1,8 @@
 // require('babel-register')
-// require('babel-polyfill')
+const HDWalletProvider = require('@truffle/hdwallet-provider')
 require('dotenv').config()
+
+const privateKeys = process.env.PRIVATE_KEYS || ""
 
 /**
  * Use this file to configure your truffle project. It's seeded with some
@@ -48,30 +50,39 @@ module.exports = {
     //
     development: {
      host: "127.0.0.1",     // Localhost (default: none)
-     port: 7545,            // Standard Ethereum port (default: none)
+     port: 8545,            // Standard Ethereum port (default: none)
      network_id: "*",       // Any network (default: none)
     },
 
     // Another network with more advanced options...
-    // advanced: {
-      // port: 8777,             // Custom port
-      // network_id: 1342,       // Custom network
-      // gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
-      // gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
-      // from: <address>,        // Account to send txs from (default: accounts[0])
-      // websockets: true        // Enable EventEmitter interface for web3 (default: false)
-    // },
+    advanced: {
+      provider: () => new HDWalletProvider(
+        privateKeys.split(','),
+        `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`
+      ),
+      port: 8777,             // Custom port
+      network_id: 1342,       // Custom network
+      gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
+      gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
+      from: '',        // Account to send txs from (default: accounts[0])
+      websockets: true        // Enable EventEmitter interface for web3 (default: false)
+    },
 
     // Useful for deploying to a public network.
     // NB: It's important to wrap the provider as a function.
-    // ropsten: {
-      // provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/YOUR-PROJECT-ID`),
-      // network_id: 3,       // Ropsten's id
-      // gas: 5500000,        // Ropsten has a lower block limit than mainnet
-      // confirmations: 2,    // # of confs to wait between deployments. (default: 0)
-      // timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-      // skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
-    // },
+    ropsten: {
+      provider: () => new HDWalletProvider(
+        privateKeys.split(','),
+        `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`
+      ),
+      network_id: 3,       // Ropsten's id, mainnet is 1
+      gas: 5500000,        // Ropsten has a lower block limit than mainnet
+      gasPrice: 2500000000, //2.5 gwei
+      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 20000,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets )
+      networkCheckTimeout: 10000,
+    },
 
     // Useful for private networks
     // private: {
@@ -83,24 +94,34 @@ module.exports = {
 
   contracts_directory: './contracts',
   contracts_build_directory: './abis',
+  // migrations_directory: "./allMyStuff/someStuff/theMigrationsFolder",
 
   // Set default mocha options here, use special reporters etc.
   mocha: {
+    useColors: true,
     // timeout: 100000
   },
 
   // Configure your compilers
   compilers: {
     solc: {
-      // version: "0.5.1",    // Fetch exact version from solc-bin (default: truffle's version)
+      version: "^0.6.0",    // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       settings: {          // See the solidity docs for advice about optimization and evmVersion
         optimizer: {
           enabled: true,
-          runs: 200
+          runs: 200       // Optimize for how many times you intend to run the code
         },
-      //  evmVersion: "byzantium"
+      //  evmVersion: "byzantium" //default "petersburg"
       }
     }
+  },
+
+  plugins: [
+    'truffle-plugin-verify'
+  ],
+
+  api_keys: {
+    etherscan: process.env.ETHSCAN_TOKEN
   }
 }
