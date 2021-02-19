@@ -1,8 +1,55 @@
 ### 配置文件
 #### truffle-config.js
 
-	contracts_directory: './src/contracts',		//合约路径
-  	contracts_build_directory: './src/abis',	//编译生成abi文件路径
+```js
+const HDWalletProvider = require('@truffle/hdwallet-provider')
+require('dotenv').config()
+
+const privateKeys = process.env.PRIVATE_KEYS || ""
+
+module.exports= {
+    
+    contracts_directory: './src/contracts',		//合约路径
+    contracts_build_directory: './src/abis',	//编译生成abi文件路径
+
+    networks: {
+        development: {
+         host: "127.0.0.1",     // Localhost (default: none)
+         port: 8545,            // Standard Ethereum port (default: none)
+         network_id: "*",       // Any network (default: none)
+        },
+
+        // 以太坊主网，通过infura api发布
+        mainnet: {
+          provider: () => new HDWalletProvider(
+            privateKeys.split(','),
+            `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`
+          ),
+          network_id: 1,       // Custom network
+          gas: 4000000,           // Gas sent with each transaction (default: ~6700000)
+          gasPrice: 1000000000,  // 1 gwei (in wei) (default: 100 gwei)
+          timeoutBlocks: 200000,
+          networkCheckTimeout: 100000,
+        },
+         
+        ropsten: {
+          provider: () => new HDWalletProvider(
+            privateKeys.split(','),
+            `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`
+          ),
+          network_id: 3,       // Ropsten's id, mainnet is 1
+          gas: 5500000,        // Ropsten has a lower block limit than mainnet
+          gasPrice: 2500000000, //2.5 gwei
+          confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+          timeoutBlocks: 20000,  //deploy times out  (minimum/default: 50)
+          // skipDryRun: true,     // Skip dry run before migrations? (default: false)
+          networkCheckTimeout: 10000,
+        },
+        
+    }
+}
+
+```
 
 ### 依赖
 合约可以通过`import`关键字引入其他依赖  
@@ -24,9 +71,18 @@ truffle test ./test/test_file_name.js
 ### 部署
 将编译的合约部署到以太坊网络，本地测试先保证连接到一个测试网络，如Ganache，或者infura之类
 
-	truffle migrate	//从最新的部署脚本开始运行
-	truffle migrate --reset 	//重新运行所有部署脚本
-  truffle migrate --network topsten    //指定网络
+```js
+truffle migrate	//从最新的部署脚本开始运行
+truffle migrate --reset 	//重新运行所有部署脚本
+ truffle migrate --network topsten    //指定网络
+```
+##### 部署测试
+
+```js
+truffle migrate --dry-run
+```
+
+
 
 
 #### 部署脚本
@@ -42,6 +98,9 @@ truffle test ./test/test_file_name.js
 
 ### 自动验证
 安装`truffle-verify-plugin`自动验证合约
+
+登录以太坊浏览器，下载API-KEYs
+
 ```
 npm install -D truffle-verify-plugin
 

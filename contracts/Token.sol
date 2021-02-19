@@ -2,7 +2,7 @@
 
 pragma solidity ^0.6.0;
 
-library SafeMath {
+library Math {
     /**
      * @dev Returns the addition of two unsigned integers, reverting on
      * overflow.
@@ -102,13 +102,13 @@ library SafeMath {
 
 contract Token {
     
-    using SafeMath for uint256;
+    using Math for uint256;
     
     //variables of the token, EIP20 standard
-    string public name = "Exodus Computing Networks";
-    string public symbol = "DUS";
+    string public name = "Power Magic Coin";
+    string public symbol = "PMC";
     uint256 public decimals = 10; // 18 decimals is the strongly suggested default, avoid changing it
-    uint256 public totalSupply = uint256(330000000).mul(uint256(10) ** decimals);
+    uint256 public totalSupply = uint256(250000000).mul(uint256(10) ** decimals);
     
     address ZERO_ADDR = address(0x0000000000000000000000000000000000000000);
     address payable public creator; // for destruct contract

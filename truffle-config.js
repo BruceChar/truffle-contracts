@@ -60,12 +60,11 @@ module.exports = {
         privateKeys.split(','),
         `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`
       ),
-      port: 8777,             // Custom port
-      network_id: 1342,       // Custom network
-      gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
-      gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
-      from: '',        // Account to send txs from (default: accounts[0])
-      websockets: true        // Enable EventEmitter interface for web3 (default: false)
+      network_id: 1,       // Custom network
+      gas: 4000000,           // Gas sent with each transaction (default: ~6700000)
+      gasPrice: 1000000000,  // 1 gwei (in wei) (default: 100 gwei)
+      timeoutBlocks: 200000,
+      networkCheckTimeout: 100000,
     },
 
     // Useful for deploying to a public network.
@@ -80,7 +79,7 @@ module.exports = {
       gasPrice: 2500000000, //2.5 gwei
       confirmations: 2,    // # of confs to wait between deployments. (default: 0)
       timeoutBlocks: 20000,  // # of blocks before a deployment times out  (minimum/default: 50)
-      skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets )
+      // skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets )
       networkCheckTimeout: 10000,
     },
 
